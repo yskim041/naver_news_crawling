@@ -18,6 +18,10 @@ def validate_date_text(date_txt):
         datetime.strptime(date_txt, '%Y.%m.%d.')
         return date_txt
     except:
+        valid_rel_keys = ['분 전', '시간 전', '일 전']
+        for valid_rel_key in valid_rel_keys:
+            if date_txt.endswith(valid_rel_key):
+                return date_txt
         return None
 
 
