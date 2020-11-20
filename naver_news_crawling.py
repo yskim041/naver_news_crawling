@@ -18,10 +18,17 @@ def validate_date_text(date_txt):
         datetime.strptime(date_txt, '%Y.%m.%d.')
         return date_txt
     except:
-        valid_rel_keys = ['분 전', '시간 전', '일 전']
-        for valid_rel_key in valid_rel_keys:
-            if date_txt.endswith(valid_rel_key):
-                return date_txt
+        if date_txt.endswith(' 전'):
+            date_obj = None
+            if date_txt.endswith('분 전'):
+                date_obj = datetime.now() - timedelta(minutes=int(date_txt[:-3]))
+            elif date_txt.endswith('시간 전'):
+                date_obj = datetime.now() - timedelta(hours=int(date_txt[:-4]))
+            elif date_txt.endswith('일 전'):
+                date_obj = datetime.now() - timedelta(days=int(date_txt[:-3]))
+
+            if date_obj:
+                return date_obj.strftime('%Y.%m.%d.')
         return None
 
 
@@ -50,7 +57,9 @@ def crawler(max_pages, query, sort_type, start_date, end_date, output_dir):
     data_frame = None
 
     for page in range(1, max_pages_t + 1, 10):
-        url = "https://search.naver.com/search.naver?where=news&query=\"" + query + "\"&sort="+sort_type+"&ds=" + start_date + "&de=" + end_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+        url = "https://search.naver.com/search.naver?where=news&query=\"" \
+                + query + "\"&sort="+sort_type+"&ds=" + start_date + "&de=" + end_date \
+                + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
         print(f'검색결과 수집 중... page {page // 10 + 1}')
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
