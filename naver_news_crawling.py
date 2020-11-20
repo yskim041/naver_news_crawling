@@ -57,9 +57,9 @@ def crawler(max_pages, query, sort_type, start_date, end_date, output_dir):
     data_frame = None
 
     for page in range(1, max_pages_t + 1, 10):
-        url = "https://search.naver.com/search.naver?where=news&query=\"" \
-                + query + "\"&sort="+sort_type+"&ds=" + start_date + "&de=" + end_date \
-                + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+        url = "https://search.naver.com/search.naver?where=news&query=\"" + query + "\"&sort=" + sort_type \
+                + "&ds=" + start_date + "&de=" + end_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to \
+                + "%2Ca%3A&start=" + str(page)
         print(f'검색결과 수집 중... page {page // 10 + 1}')
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -102,7 +102,7 @@ def crawler(max_pages, query, sort_type, start_date, end_date, output_dir):
 
 
 def main():
-    print('=' * 50 + '\n입력 형식에 맞게 입력해주세요. 아무 것도 입력하지 않으시면 기본 값이 적용됩니다.\n' + '=' * 50)
+    print('=' * 80 + '\n입력 형식에 맞게 입력해주세요. 아무 것도 입력하지 않으시면 기본 값이 적용됩니다.\n' + '=' * 80)
 
     # Load default values from configs.json
     with open('./configs.json', 'r', encoding='utf8') as f_in:
@@ -125,8 +125,8 @@ def main():
     max_pages = input(f'최대 크롤링할 페이지 수 입력하시오 [Default={default_max_pages}]: ') or default_max_pages
     query = input(f'검색어 입력 [Default={default_query}]: ') or default_query
     sort_type = input(f'뉴스 검색 방식 입력 (관련도순=0, 최신순=1, 오래된순=2) [Default={default_sort_type}]: ') or default_sort_type
-    start_date = input(f'시작날짜 입력 [Default={default_start_date}]: ') or default_start_date  # 2020.01.04
-    end_date = input(f'끝날짜 입력 [Default={default_end_date}]: ') or default_end_date   # 2020.01.05
+    start_date = input(f'시작날짜 입력 [Default={default_start_date}]: ') or default_start_date
+    end_date = input(f'끝날짜 입력 [Default={default_end_date}]: ') or default_end_date
 
     # Run crawler
     crawler(max_pages, query, sort_type, start_date, end_date, output_dir)
